@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Music Recommendation System</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f2f5f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="number"] {
+            padding: 6px 10px;
+            margin: 5px 0 15px;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 10px 10px 0 0;
+            border: none;
+            border-radius: 6px;
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .results {
+            margin-top: 30px;
+        }
+
+        .section-title {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #007BFF;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Оцените песни</h1>
+        <form method="POST">
+            {% for song in songs %}
+                <div>
+                    <label>{{ song }}</label>
+                    <input type="number" name="song_{{ loop.index }}" min="1" max="10" placeholder="Оценка от 1 до 10" />
+                </div>
+            {% endfor %}
+            <div>
+                <button type="submit" name="predict_knn">Предсказать оценки (KNN)</button>
+                <button type="submit" name="predict_other">Предсказать нравится ли песня</button>
+            </div>
+        </form>
+
+        <div class="results">
+            {% if knn_result %}
+                <h2 class="section-title">Результаты KNN:</h2>
+                <ul>
+                    {% for song, prediction in knn_result.items() %}
+                        <li>{{ song }}: {{ prediction }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            {% if other_result %}
+                <h2 class="section-title">Результаты других моделей:</h2>
+                <ul>
+                    {% for model, result in other_result.items() %}
+                        <li>{{ model }}: {{ result }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
